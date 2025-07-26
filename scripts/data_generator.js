@@ -54,8 +54,8 @@ const directoryData = {
   name: path.basename(directoryPath),
   type: "directory",
   size: 0,
-  created: "2023-05-25T10:07:12.565Z",
-  modified: "2018-05-26T21:40:24.000Z",
+  created: "2025-07-25T10:07:12.565Z",
+  modified: "2023-05-17T10:07:12.565Z",
   contents: getDirectoryContents(directoryPath),
 };
 

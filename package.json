@@ -1,26 +1,31 @@
 {
   "name": "myimages.zip",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "check": "tsc --noEmit",
+    "format": "biome format --write ./",
+    "lint": "biome lint ./"
   },
   "dependencies": {
-    "@types/node": "20.1.7",
-    "@types/react": "18.2.6",
-    "@types/react-dom": "18.2.4",
-    "eslint": "8.40.0",
-    "eslint-config-next": "13.4.2",
-    "next": "13.4.2",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "typescript": "5.0.4"
+    "@vercel/analytics": "^1.5.0",
+    "next": "15.4.4",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "exiftool-vendored": "^22.0.0",
-    "sass": "^1.62.1"
-  }
+    "@biomejs/biome": "2.1.2",
+    "@types/node": "24.1.0",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "exiftool-vendored": "^30.3.0",
+    "sass": "^1.89.2",
+    "typescript": "5.8.3"
+  },
+  "trustedDependencies": [
+    "@parcel/watcher"
+  ]
 }
