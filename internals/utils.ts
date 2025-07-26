@@ -30,7 +30,7 @@ export function getDirectoryContents(path: string): ItemData[] {
   let currentData: ItemData = FINAL_DATA;
 
   if (!path) {
-    return currentData.contents!;
+    return currentData.contents || [];
   }
 
   for (const segment of pathSegments) {
@@ -41,7 +41,7 @@ export function getDirectoryContents(path: string): ItemData[] {
     currentData = item;
   }
 
-  return currentData.contents!;
+  return currentData.contents || [];
 }
 
 // turns 2023-05-25T10:07:12.565Z into 2023-05-25 10:07

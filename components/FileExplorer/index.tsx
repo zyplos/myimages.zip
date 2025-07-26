@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import styles from "./page.module.scss";
 import { usePathname } from "next/navigation";
 import {
-  ItemData,
+  type ItemData,
   convertDateFormat,
   formatIntegerWithSpaces,
   getDirectoryContents,
@@ -18,7 +18,7 @@ interface Column {
   size: string;
 }
 
-interface ColumnSizeData {
+interface _ColumnSizeData {
   header: string;
   size: string;
   type: "numeric" | "text-short" | "text-long";
@@ -73,7 +73,7 @@ function CorrectLink({
   item: ItemData;
   currentPath: string;
 }) {
-  const isIndex = currentPath == "/";
+  const isIndex = currentPath === "/";
   const router = useRouter();
   // a TODO that would be nice if completed:
   // the onTouchStart's used to be onClick's but that wouldn't be reliable for things like tablets
@@ -85,18 +85,19 @@ function CorrectLink({
     return (
       <>
         <button
+          type="button"
           onDoubleClick={() =>
-            router.push((isIndex ? "" : currentPath) + `/${item.name}`)
+            router.push(`${isIndex ? "" : currentPath}/${item.name}`)
           }
           onTouchStart={() => {
             // allow on click only on devices with a width of 800px or less
             // if (window.innerWidth > 800) return;
-            router.push((isIndex ? "" : currentPath) + `/${item.name}`);
+            router.push(`${isIndex ? "" : currentPath}/${item.name}`);
           }}
           onKeyUp={(e) => {
             // if key is enter or numpad enter
             if (e.key === "Enter" || e.key === "NumpadEnter") {
-              router.push((isIndex ? "" : currentPath) + `/${item.name}`);
+              router.push(`${isIndex ? "" : currentPath}/${item.name}`);
             }
           }}
         >
@@ -105,10 +106,13 @@ function CorrectLink({
         </button>
       </>
     );
-  } else if (item.type === "url") {
+  }
+
+  if (item.type === "url") {
     return (
       <>
         <button
+          type="button"
           onDoubleClick={() => window.open(item.url)}
           onTouchStart={() => {
             // allow on click only on devices with a width of 800px or less
@@ -129,39 +133,40 @@ function CorrectLink({
         </button>
       </>
     );
-  } else {
-    return (
-      <>
-        <button
-          onDoubleClick={() => {
-            window.open(
-              (isIndex ? "" : currentPath) + `/${item.name}.${item.type}`
-            );
-          }}
-          onTouchStart={() => {
-            // allow on click only on devices with a width of 800px or less
-            // if (window.innerWidth > 800) return;
-            window.open(
-              (isIndex ? "" : currentPath) + `/${item.name}.${item.type}`
-            );
-          }}
-          onKeyUp={(e) => {
-            // if key is enter or numpad enter
-            if (e.key === "Enter" || e.key === "NumpadEnter") {
-              window.open(
-                (isIndex ? "" : currentPath) + `/${item.name}.${item.type}`
-              );
-            }
-          }}
-        >
-          <TypedIcon type={item.type} />
-          <span>
-            {item.name}.{item.type}
-          </span>
-        </button>
-      </>
-    );
   }
+
+  return (
+    <>
+      <button
+        type="button"
+        onDoubleClick={() => {
+          window.open(
+            `${isIndex ? "" : currentPath}/${item.name}.${item.type}`
+          );
+        }}
+        onTouchStart={() => {
+          // allow on click only on devices with a width of 800px or less
+          // if (window.innerWidth > 800) return;
+          window.open(
+            `${isIndex ? "" : currentPath}/${item.name}.${item.type}`
+          );
+        }}
+        onKeyUp={(e) => {
+          // if key is enter or numpad enter
+          if (e.key === "Enter" || e.key === "NumpadEnter") {
+            window.open(
+              `${isIndex ? "" : currentPath}/${item.name}.${item.type}`
+            );
+          }
+        }}
+      >
+        <TypedIcon type={item.type} />
+        <span>
+          {item.name}.{item.type}
+        </span>
+      </button>
+    </>
+  );
 }
 
 function getColumnSizesFromLocalStorage(): string[] {
@@ -183,7 +188,7 @@ export default function FileExplorer() {
     const table = document.querySelector("table");
     if (!table) return;
 
-    let localColumnData = getColumnSizesFromLocalStorage();
+    const localColumnData = getColumnSizesFromLocalStorage();
 
     const columns: Column[] = [];
     let headerBeingResized: HTMLElement | null;
@@ -196,7 +201,7 @@ export default function FileExplorer() {
 
         const horizontalScrollOffset = document.documentElement.scrollLeft;
 
-        let clientX;
+        let clientX: number;
         if (e instanceof MouseEvent) {
           clientX = e.clientX;
         } else {
@@ -204,13 +209,13 @@ export default function FileExplorer() {
         }
 
         const width =
-          horizontalScrollOffset + clientX - headerBeingResized!.offsetLeft;
+          horizontalScrollOffset + clientX - headerBeingResized.offsetLeft;
 
         const column = columns.find(
           ({ header }) => header === headerBeingResized
         );
         if (column) {
-          column.size = Math.max(min, width) + "px";
+          column.size = `${Math.max(min, width)}px`;
         }
 
         try {
@@ -271,7 +276,7 @@ export default function FileExplorer() {
     // GRAB COLUMNS FROM DOM
     document.querySelectorAll("th").forEach((header, index) => {
       console.log("==========header", header, index);
-      const max = columnTypeToRatioMap[header.dataset.type as string] + "fr";
+      const max = `${columnTypeToRatioMap[header.dataset.type as string]}fr`;
       columns.push({
         header,
         size: localColumnData[index] || `minmax(${min}px, ${max})`,
@@ -341,30 +346,31 @@ export default function FileExplorer() {
   // remove beginning slash
   const pathFixed = pathname.substring(1);
 
-  let rootcontents: ItemData[] = [];
+  let rootContents: ItemData[] = [];
   try {
-    rootcontents = getDirectoryContents(pathFixed);
-  } catch (error) {
+    rootContents = getDirectoryContents(pathFixed);
+  } catch (_error) {
     notFound();
   }
 
   // sort by directory first, then by name
-  rootcontents.sort((a, b) => {
+  rootContents.sort((a, b) => {
     if (a.type === "directory" && b.type !== "directory") {
       return -1;
+    }
 
-      // if a is not a directory and b is a directory, return 1
-    } else if (a.type !== "directory" && b.type === "directory") {
+    // if a is not a directory and b is a directory, return 1
+    if (a.type !== "directory" && b.type === "directory") {
       return 1;
+    }
 
-      // if a and b are both directories, sort by name
-    } else if (a.type === "directory" && b.type === "directory") {
+    // if a and b are both directories, sort by name
+    if (a.type === "directory" && b.type === "directory") {
       return a.name.localeCompare(b.name);
 
       // if a and b are both not directories, sort by name
-    } else {
-      return a.name.localeCompare(b.name);
     }
+    return a.name.localeCompare(b.name);
   });
 
   console.log("IS LOADING: ", isLoading);
@@ -382,38 +388,31 @@ export default function FileExplorer() {
           <tr>
             <th data-type="text-long">
               Name{" "}
-              <span
-                className={`resize-handle ${styles["resize-handle"]}`}
-              ></span>
+              <span className={`resize-handle ${styles["resize-handle"]}`} />
             </th>
             <th data-type="numeric">
               Size{" "}
-              <span
-                className={`resize-handle ${styles["resize-handle"]}`}
-              ></span>
+              <span className={`resize-handle ${styles["resize-handle"]}`} />
             </th>
             <th data-type="text-short">
               Modified{" "}
-              <span
-                className={`resize-handle ${styles["resize-handle"]}`}
-              ></span>
+              <span className={`resize-handle ${styles["resize-handle"]}`} />
             </th>
             <th data-type="text-short">
               Created{" "}
-              <span
-                className={`resize-handle ${styles["resize-handle"]}`}
-              ></span>
+              <span className={`resize-handle ${styles["resize-handle"]}`} />
             </th>
           </tr>
         </thead>
         <tbody>
-          {rootcontents.map((item, index) => (
+          {rootContents.map((item, index) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: fine here
             <tr key={index}>
               <td>
                 <CorrectLink item={item} currentPath={pathname} />
               </td>
               <td>
-                {item.type == "directory"
+                {item.type === "directory"
                   ? ""
                   : formatIntegerWithSpaces(item.size)}
               </td>
@@ -425,7 +424,7 @@ export default function FileExplorer() {
       </table>
       <footer className={styles["footer-toolbar"]}>
         <span>
-          {currentlySelected ? 1 : 0} / {rootcontents.length} object(s) selected
+          {currentlySelected ? 1 : 0} / {rootContents.length} object(s) selected
         </span>
         <span>
           {currentlySelected ? grabBytesDataFromDOM(currentlySelected) : "\t"}

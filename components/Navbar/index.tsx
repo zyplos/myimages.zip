@@ -5,20 +5,20 @@ export default function Navbar() {
   return (
     <div className={styles["navbar-wrapper"]}>
       <div className={styles.toolbar}>
-        <button>File</button>
-        <button>Edit</button>
-        <button>View</button>
-        <button>Favorites</button>
-        <button>Tools</button>
-        <button>Help</button>
+        <button type="button">File</button>
+        <button type="button">Edit</button>
+        <button type="button">View</button>
+        <button type="button">Favorites</button>
+        <button type="button">Tools</button>
+        <button type="button">Help</button>
       </div>
       <div className={styles["icon-toolbar-wrapper"]}>
-        <div className={styles["divider"]}>
-          <div></div>
-          <div></div>
+        <div className={styles.divider}>
+          <div />
+          <div />
         </div>
         <div className={styles["icon-toolbar"]}>
-          <button>
+          <button type="button">
             <Image
               src="/icons/add-icon.svg"
               width="48"
@@ -27,7 +27,7 @@ export default function Navbar() {
             />
             <span>Add</span>
           </button>
-          <button>
+          <button type="button">
             <Image
               src="/icons/extract-icon.svg"
               width="48"
@@ -36,7 +36,7 @@ export default function Navbar() {
             />
             <span>Extract</span>
           </button>
-          <button>
+          <button type="button">
             <Image
               src="/icons/test-icon.svg"
               width="48"
@@ -45,7 +45,7 @@ export default function Navbar() {
             />
             <span>Test</span>
           </button>
-          <button>
+          <button type="button">
             <Image
               src="/icons/copy-icon.svg"
               width="48"
@@ -54,7 +54,7 @@ export default function Navbar() {
             />
             <span>Copy</span>
           </button>
-          <button>
+          <button type="button">
             <Image
               src="/icons/move-icon.svg"
               width="48"
@@ -63,7 +63,7 @@ export default function Navbar() {
             />
             <span>Move</span>
           </button>
-          <button>
+          <button type="button">
             <Image
               src="/icons/delete-icon.svg"
               width="48"
@@ -72,7 +72,7 @@ export default function Navbar() {
             />
             <span>Delete</span>
           </button>
-          <button>
+          <button type="button">
             <Image
               src="/icons/info-icon.svg"
               width="48"

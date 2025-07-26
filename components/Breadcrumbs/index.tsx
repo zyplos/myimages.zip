@@ -9,17 +9,18 @@ export default function Breadcrumbs() {
   const pathname = usePathname();
   console.log("BREADCRUMBS CURRENT pathname", pathname);
 
-  const items = ["C:\\Users\\offic\\Downloads\\myimages.zip\\"];
+  const items = ["C:\\Users\\zyplos\\Downloads\\myimages.zip\\"];
   pathname.split("/").forEach((item) => {
     if (item !== "") {
-      items.push(item + "\\");
+      items.push(`${item}\\`);
     }
   });
   // for each item, create a link that goes up one level
   const Links = items.map((item, index) => {
     const upLevelLink = pathname.split("/").slice(1).slice(0, index).join("/");
     return (
-      <Link key={index} href={"/" + upLevelLink}>
+      // biome-ignore lint/suspicious/noArrayIndexKey: okay here
+      <Link key={index} href={`/${upLevelLink}`}>
         {item}
       </Link>
     );
@@ -27,14 +28,14 @@ export default function Breadcrumbs() {
 
   // remove last path segment to go up one level
   const upLevelLink = pathname.split("/").slice(1).slice(0, -1).join("/");
-  const isIndex = pathname == "/";
+  const isIndex = pathname === "/";
 
   return (
     <div className={styles["breadcrumbs-wrapper"]}>
       <div className={styles["up-button-wrapper"]}>
         <Link
           className={`${styles["up-button"]} ${isIndex ? styles["root-button"] : ""}`}
-          href={"/" + upLevelLink}
+          href={`/${upLevelLink}`}
         >
           <Image
             src="/icons/levelup-icon.svg"

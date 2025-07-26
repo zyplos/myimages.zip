@@ -1,5 +1,5 @@
-const fs = require("fs").promises;
-const path = require("path");
+const fs = require("node:fs/promises");
+const path = require("node:path");
 
 const exiftool = require("exiftool-vendored").exiftool;
 
@@ -14,21 +14,22 @@ async function exiftoolProcess(filePath) {
     // console.log("GPS TAGS", gpsTagsArray);
 
     if (gpsTagsArray.length === 0) {
-      console.log("Processed " + filePath);
+      console.log(`Processed ${filePath}`);
       return;
-    } else {
-      console.log("!!!!!!!!!!!!!! GPS tags found: " + filePath);
     }
+
+    console.log("!!!!!!!!!!!!!! GPS tags found", filePath);
 
     // make new object key:null
     const nullifiedTags = gpsTagsArray.reduce((acc, curr) => {
       acc[curr] = null;
       return acc;
     }, {});
+
     console.log("NULLIFIED TAGS", nullifiedTags);
 
     await exiftool.write(filePath, nullifiedTags);
-    await fs.unlink(filePath + "_original");
+    await fs.unlink(`${filePath}_original`);
   } catch (error) {
     console.error("==== ERROR");
     console.error(error);
