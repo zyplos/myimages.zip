@@ -3,7 +3,12 @@
 import { useEffect, useState } from "react";
 import styles from "./page.module.scss";
 import { usePathname } from "next/navigation";
-import { ItemData, convertDateFormat, formatIntegerWithSpaces, getDirectoryContents } from "@/internals/utils";
+import {
+  ItemData,
+  convertDateFormat,
+  formatIntegerWithSpaces,
+  getDirectoryContents,
+} from "@/internals/utils";
 import { useRouter, notFound } from "next/navigation";
 import Image from "next/image";
 import Loader from "@/components/Loader";
@@ -51,10 +56,23 @@ const typeToIconMap: { [key: string]: string } = {
 };
 
 function TypedIcon({ type }: { type: string }) {
-  return <Image src={`/icons/${typeToIconMap[type] || "defaultfile"}-icon.svg`} width="16" height="16" alt="File Icon" />;
+  return (
+    <Image
+      src={`/icons/${typeToIconMap[type] || "defaultfile"}-icon.svg`}
+      width="16"
+      height="16"
+      alt="File Icon"
+    />
+  );
 }
 
-function CorrectLink({ item, currentPath }: { item: ItemData; currentPath: string }) {
+function CorrectLink({
+  item,
+  currentPath,
+}: {
+  item: ItemData;
+  currentPath: string;
+}) {
   const isIndex = currentPath == "/";
   const router = useRouter();
   // a TODO that would be nice if completed:
@@ -67,7 +85,9 @@ function CorrectLink({ item, currentPath }: { item: ItemData; currentPath: strin
     return (
       <>
         <button
-          onDoubleClick={() => router.push((isIndex ? "" : currentPath) + `/${item.name}`)}
+          onDoubleClick={() =>
+            router.push((isIndex ? "" : currentPath) + `/${item.name}`)
+          }
           onTouchStart={() => {
             // allow on click only on devices with a width of 800px or less
             // if (window.innerWidth > 800) return;
@@ -114,17 +134,23 @@ function CorrectLink({ item, currentPath }: { item: ItemData; currentPath: strin
       <>
         <button
           onDoubleClick={() => {
-            window.open((isIndex ? "" : currentPath) + `/${item.name}.${item.type}`);
+            window.open(
+              (isIndex ? "" : currentPath) + `/${item.name}.${item.type}`
+            );
           }}
           onTouchStart={() => {
             // allow on click only on devices with a width of 800px or less
             // if (window.innerWidth > 800) return;
-            window.open((isIndex ? "" : currentPath) + `/${item.name}.${item.type}`);
+            window.open(
+              (isIndex ? "" : currentPath) + `/${item.name}.${item.type}`
+            );
           }}
           onKeyUp={(e) => {
             // if key is enter or numpad enter
             if (e.key === "Enter" || e.key === "NumpadEnter") {
-              window.open((isIndex ? "" : currentPath) + `/${item.name}.${item.type}`);
+              window.open(
+                (isIndex ? "" : currentPath) + `/${item.name}.${item.type}`
+              );
             }
           }}
         >
@@ -148,7 +174,8 @@ function getColumnSizesFromLocalStorage(): string[] {
 }
 
 export default function FileExplorer() {
-  const [currentlySelected, setCurrentlySelected] = useState<HTMLButtonElement | null>(null);
+  const [currentlySelected, setCurrentlySelected] =
+    useState<HTMLButtonElement | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -176,16 +203,22 @@ export default function FileExplorer() {
           clientX = e.touches[0].clientX;
         }
 
-        const width = horizontalScrollOffset + clientX - headerBeingResized!.offsetLeft;
+        const width =
+          horizontalScrollOffset + clientX - headerBeingResized!.offsetLeft;
 
-        const column = columns.find(({ header }) => header === headerBeingResized);
+        const column = columns.find(
+          ({ header }) => header === headerBeingResized
+        );
         if (column) {
           column.size = Math.max(min, width) + "px";
         }
 
         try {
           // save columns data to localstorage, but only the size property
-          localStorage.setItem("columns", JSON.stringify(columns.map(({ size }) => size)));
+          localStorage.setItem(
+            "columns",
+            JSON.stringify(columns.map(({ size }) => size))
+          );
           console.log(
             "saved to localstorage",
             columns.map(({ size }) => size)
@@ -194,7 +227,9 @@ export default function FileExplorer() {
           console.error("couldnt save to localstorage", error);
         }
 
-        const CONSTRUCTED_STYLE_STRING = columns.map(({ size }) => size).join(" ");
+        const CONSTRUCTED_STYLE_STRING = columns
+          .map(({ size }) => size)
+          .join(" ");
         console.log("CONSTRUCTED_STYLE_STRING", CONSTRUCTED_STYLE_STRING);
         table.style.gridTemplateColumns = CONSTRUCTED_STYLE_STRING;
       });
@@ -219,7 +254,8 @@ export default function FileExplorer() {
     const initResize = ({ target }: MouseEvent | TouchEvent) => {
       console.log("initResize");
 
-      headerBeingResized = (target as HTMLSpanElement).parentNode as HTMLElement;
+      headerBeingResized = (target as HTMLSpanElement)
+        .parentNode as HTMLElement;
       window.addEventListener("mousemove", onMouseMove);
       window.addEventListener("mouseup", onMouseUp);
 
@@ -241,10 +277,14 @@ export default function FileExplorer() {
         size: localColumnData[index] || `minmax(${min}px, ${max})`,
       });
       console.log("==========columns", columns);
-      table.style.gridTemplateColumns = columns.map(({ size }) => size).join(" ");
+      table.style.gridTemplateColumns = columns
+        .map(({ size }) => size)
+        .join(" ");
       setIsLoading(false);
 
-      const resizeHandle = header.querySelector(".resize-handle") as HTMLElement;
+      const resizeHandle = header.querySelector(
+        ".resize-handle"
+      ) as HTMLElement;
       resizeHandle.addEventListener("mousedown", initResize);
 
       // DEV TOUCH EVENTS
@@ -281,7 +321,9 @@ export default function FileExplorer() {
       window.removeEventListener("touchend", onMouseUp);
 
       columns.forEach(({ header }) => {
-        const resizeHandle = header.querySelector(".resize-handle") as HTMLElement;
+        const resizeHandle = header.querySelector(
+          ".resize-handle"
+        ) as HTMLElement;
         resizeHandle.removeEventListener("mousedown", initResize);
 
         // DEV TOUCH EVENTS
@@ -339,16 +381,28 @@ export default function FileExplorer() {
         <thead>
           <tr>
             <th data-type="text-long">
-              Name <span className={`resize-handle ${styles["resize-handle"]}`}></span>
+              Name{" "}
+              <span
+                className={`resize-handle ${styles["resize-handle"]}`}
+              ></span>
             </th>
             <th data-type="numeric">
-              Size <span className={`resize-handle ${styles["resize-handle"]}`}></span>
+              Size{" "}
+              <span
+                className={`resize-handle ${styles["resize-handle"]}`}
+              ></span>
             </th>
             <th data-type="text-short">
-              Modified <span className={`resize-handle ${styles["resize-handle"]}`}></span>
+              Modified{" "}
+              <span
+                className={`resize-handle ${styles["resize-handle"]}`}
+              ></span>
             </th>
             <th data-type="text-short">
-              Created <span className={`resize-handle ${styles["resize-handle"]}`}></span>
+              Created{" "}
+              <span
+                className={`resize-handle ${styles["resize-handle"]}`}
+              ></span>
             </th>
           </tr>
         </thead>
@@ -358,7 +412,11 @@ export default function FileExplorer() {
               <td>
                 <CorrectLink item={item} currentPath={pathname} />
               </td>
-              <td>{item.type == "directory" ? "" : formatIntegerWithSpaces(item.size)}</td>
+              <td>
+                {item.type == "directory"
+                  ? ""
+                  : formatIntegerWithSpaces(item.size)}
+              </td>
               <td>{convertDateFormat(item.modified)}</td>
               <td>{convertDateFormat(item.created)}</td>
             </tr>
@@ -369,9 +427,15 @@ export default function FileExplorer() {
         <span>
           {currentlySelected ? 1 : 0} / {rootcontents.length} object(s) selected
         </span>
-        <span>{currentlySelected ? grabBytesDataFromDOM(currentlySelected) : "\t"}</span>
-        <span>{currentlySelected ? grabBytesDataFromDOM(currentlySelected) : "\t"}</span>
-        <span>{currentlySelected ? grabModifiedDateFromDOM(currentlySelected) : ""}</span>
+        <span>
+          {currentlySelected ? grabBytesDataFromDOM(currentlySelected) : "\t"}
+        </span>
+        <span>
+          {currentlySelected ? grabBytesDataFromDOM(currentlySelected) : "\t"}
+        </span>
+        <span>
+          {currentlySelected ? grabModifiedDateFromDOM(currentlySelected) : ""}
+        </span>
       </footer>
     </>
   );

@@ -32,12 +32,25 @@ export default function Breadcrumbs() {
   return (
     <div className={styles["breadcrumbs-wrapper"]}>
       <div className={styles["up-button-wrapper"]}>
-        <Link className={`${styles["up-button"]} ${isIndex ? styles["root-button"] : ""}`} href={"/" + upLevelLink}>
-          <Image src="/icons/levelup-icon.svg" width="18" height="18" alt="Up Level Icon" />
+        <Link
+          className={`${styles["up-button"]} ${isIndex ? styles["root-button"] : ""}`}
+          href={"/" + upLevelLink}
+        >
+          <Image
+            src="/icons/levelup-icon.svg"
+            width="18"
+            height="18"
+            alt="Up Level Icon"
+          />
         </Link>
       </div>
       <div className={styles["breadcrumbs-list-wrapper"]}>
-        <Image src={`/icons/${isIndex ? "zipfile" : "folder"}-icon.svg`} width="18" height="18" alt="Breadcrumbs Icon" />
+        <Image
+          src={`/icons/${isIndex ? "zipfile" : "folder"}-icon.svg`}
+          width="18"
+          height="18"
+          alt="Breadcrumbs Icon"
+        />
         <div className={styles["breadcrumbs-list"]}>{Links}</div>
       </div>
     </div>

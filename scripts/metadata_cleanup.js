@@ -78,6 +78,9 @@ async function readFilesAsync(directory) {
 readFilesAsync(directoryPath).then(async () => {
   console.log("DONE");
   console.log("FINAL", [...extensionsSet]);
-  await fs.writeFile("EXTRA_DATA.json", JSON.stringify([...extensionsSet], null, 2));
+  await fs.writeFile(
+    "EXTRA_DATA.json",
+    JSON.stringify([...extensionsSet], null, 2)
+  );
   exiftool.end();
 });
