@@ -2,7 +2,11 @@ const fs = require("node:fs");
 const path = require("node:path");
 const directoryPath = "C:\\devspace\\frontend\\myimages.zip\\public";
 
+const SKIP = ["C:\\devspace\\frontend\\myimages.zip\\public\\icons"];
+
 function getDirectoryContents(directoryPath) {
+  // console.log(directoryPath);
+
   const stats = fs.statSync(directoryPath);
   if (!stats.isDirectory()) {
     throw new Error("Provided path is not a directory.");
@@ -13,6 +17,8 @@ function getDirectoryContents(directoryPath) {
 
   for (const item of contents) {
     const itemPath = path.join(directoryPath, item);
+    if (SKIP.includes(itemPath)) continue;
+
     const itemStats = fs.statSync(itemPath);
     const isDirectory = itemStats.isDirectory();
 
@@ -61,4 +67,4 @@ const directoryData = {
 
 const jsonData = JSON.stringify(directoryData, null, 2);
 // save to file
-fs.writeFileSync("FINAL_DATA.json", jsonData);
+fs.writeFileSync("../internals/FINAL_DATA.json", jsonData);
